@@ -22,11 +22,11 @@
             <artifactId>mybatis-typehandlers-jsr310</artifactId>
             <version>${mybatis-typehandlers-jsr310.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.2.0.Final</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>
