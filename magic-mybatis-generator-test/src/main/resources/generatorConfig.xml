@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE generatorConfiguration
-        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <!-- http://blog.csdn.net/isea533/article/details/42102297 -->
@@ -25,10 +25,13 @@
             <property name="" value="" />
         </plugin>-->
 
-        <commentGenerator type="com.magic.generator.plugins.comment.MagicCommentGenerator">
+        <!--<commentGenerator type="com.magic.generator.plugins.comment.MagicCommentGenerator">
             <property name="suppressAllComments" value="${suppress_all_comments}" />
             <property name="suppressDate" value="${suppress_date}" />
-        </commentGenerator>
+            <property name="dateFormat" value="${dateFormat}" />
+            <property name="addRemarkComments" value="${addRemarkComments}" />
+            <property name="author" value="${author}" />
+        </commentGenerator>-->
 
         <jdbcConnection driverClass="${driver_class}"
                         connectionURL="${connection_url}"
