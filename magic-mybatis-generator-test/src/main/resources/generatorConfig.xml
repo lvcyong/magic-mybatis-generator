@@ -25,13 +25,13 @@
             <property name="" value="" />
         </plugin>-->
 
-        <!--<commentGenerator type="com.magic.generator.plugins.comment.MagicCommentGenerator">
+        <commentGenerator type="com.magic.generator.plugins.comment.MagicCommentGenerator">
             <property name="suppressAllComments" value="${suppress_all_comments}" />
             <property name="suppressDate" value="${suppress_date}" />
             <property name="dateFormat" value="${dateFormat}" />
             <property name="addRemarkComments" value="${addRemarkComments}" />
             <property name="author" value="${author}" />
-        </commentGenerator>-->
+        </commentGenerator>
 
         <jdbcConnection driverClass="${driver_class}"
                         connectionURL="${connection_url}"
