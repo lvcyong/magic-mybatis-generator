@@ -1,12 +1,23 @@
 package com.magic.generator.plugins.comment;
 
+import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
-import org.mybatis.generator.internal.DefaultCommentGenerator;
+import org.mybatis.generator.config.MergeConstants;
+import org.mybatis.generator.config.PropertyRegistry;
+import org.mybatis.generator.internal.util.StringUtility;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+
+import static org.mybatis.generator.internal.util.StringUtility.isTrue;
 
 /**
  * <br>Filename:    MagicCommentGenerator  <br>
@@ -22,106 +33,277 @@ import java.util.Properties;
  * ------------------------------------------------------------------  <br>
  * 2017-09-25    lvcyong      1.0         1.0 Version  <br>
  */
-public class MagicCommentGenerator extends DefaultCommentGenerator {
+public class MagicCommentGenerator implements CommentGenerator {
 
-    /**
-     * 是否生成注解
-     */
+    /** 属性 */
+    private Properties properties;
+
+    /** 是否生成日期注释 */
+    private boolean suppressDate;
+
+    /** 是否生成注释 */
     private boolean suppressAllComments;
 
-    /**
-     * Instantiates a new default comment generator.
-     */
+    /** 是否添加表及字段说明注释 */
+    private boolean addRemarkComments;
+
+    /** 日式格式化 */
+    private SimpleDateFormat dateFormat;
+
+    /** 注释作者 */
+    private String author;
+
     public MagicCommentGenerator() {
-        super();
-    }
-
-    @Override
-    public void addJavaFileComment(CompilationUnit compilationUnit) {
-        super.addJavaFileComment(compilationUnit);
+        this.properties = new Properties();
+        this.suppressDate = false;
+        this.suppressAllComments = false;
+        this.addRemarkComments = false;
+        this.author = "";
     }
 
     /**
-     * Adds a suitable comment to warn users that the element was generated, and when it was generated.
+     * Adds properties for this instance from any properties configured in the
+     * CommentGenerator configuration.
+     * <p>
+     * This method will be called before any of the other methods.
      *
-     * @param xmlElement the xml element
+     * @param properties All properties from the configuration
      */
-    @Override
-    public void addComment(XmlElement xmlElement) {
-        super.addComment(xmlElement);
-    }
-
-    @Override
-    public void addRootComment(XmlElement rootElement) {
-        super.addRootComment(rootElement);
-    }
-
-    @Override
     public void addConfigurationProperties(Properties properties) {
-        super.addConfigurationProperties(properties);
+        this.properties.putAll(properties);
+
+        suppressDate = isTrue(properties
+                .getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE));
+
+        suppressAllComments = isTrue(properties
+                .getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_ALL_COMMENTS));
+
+        addRemarkComments = isTrue(properties
+                .getProperty(PropertyRegistry.COMMENT_GENERATOR_ADD_REMARK_COMMENTS));
+
+        String dateFormatString = properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_DATE_FORMAT);
+        if (StringUtility.stringHasValue(dateFormatString)) {
+            dateFormat = new SimpleDateFormat(dateFormatString);
+        }
+
+        // 作者
+        String authorString = properties.getProperty("author");
+        if (StringUtility.stringHasValue(authorString)) {
+            author = authorString;
+        } else {
+            author = "";
+        }
     }
 
     /**
-     * This method adds the custom javadoc tag for. You may do nothing if you do not wish to include the Javadoc tag -
-     * however, if you do not include the Javadoc tag then the Java merge capability of the eclipse plugin will break.
+     * 数据库列对应字段添加注释
      *
-     * @param javaElement       the java element
-     * @param markAsDoNotDelete
-     */
-    @Override
-    protected void addJavadocTag(JavaElement javaElement, boolean markAsDoNotDelete) {
-        super.addJavadocTag(javaElement, markAsDoNotDelete);
-    }
-
-    /**
-     * This method returns a formated date string to include in the Javadoc tag
-     * and XML comments. You may return null if you do not want the date in
-     * these documentation elements.
+     * @param field              字段
+     * @param introspectedTable  表
+     * @param introspectedColumn 列
      *
-     * @return a string representing the current timestamp, or null
+     * @author  lvcyong
+     * @date    2017/9/26 14:12
      */
-    @Override
-    protected String getDateString() {
-        return super.getDateString();
-    }
-
-    @Override
-    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
-        super.addClassComment(innerClass, introspectedTable);
-    }
-
-    @Override
-    public void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        super.addModelClassComment(topLevelClass, introspectedTable);
-    }
-
-    @Override
-    public void addEnumComment(InnerEnum innerEnum, IntrospectedTable introspectedTable) {
-        super.addEnumComment(innerEnum, introspectedTable);
-    }
-
-    @Override
     public void addFieldComment(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
-        super.addFieldComment(field, introspectedTable, introspectedColumn);
+        if (suppressAllComments) {
+            return;
+        }
+
+        field.addJavaDocLine("/**"); //$NON-NLS-1$
+
+        String remarks = introspectedColumn.getRemarks();
+        if (remarks == null) {
+            remarks = "";
+        } else {
+            remarks = remarks.trim();
+        }
+
+        if (addRemarkComments && StringUtility.stringHasValue(remarks)) {
+            String[] remarkLines = remarks.split(System.getProperty("line.separator"));  //$NON-NLS-1$
+            for (String remarkLine : remarkLines) {
+                field.addJavaDocLine(" * " + remarkLine);  //$NON-NLS-1$
+            }
+        }
+
+        field.addJavaDocLine(" * <br>"); //$NON-NLS-1$
+
+        String sb = " * 该字段对应的数据库列为 " +
+                introspectedTable.getFullyQualifiedTable() +
+                '.' +
+                introspectedColumn.getActualColumnName();
+        field.addJavaDocLine(sb);
+
+        addJavadocTag(field, false);
+
+        field.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
-    @Override
+    /**
+     * 字段添加注释
+     *
+     * @param field             字段
+     * @param introspectedTable 表
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 14:13
+     */
     public void addFieldComment(Field field, IntrospectedTable introspectedTable) {
-        super.addFieldComment(field, introspectedTable);
+        if (suppressAllComments) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        field.addJavaDocLine("/**"); //$NON-NLS-1$
+        field
+                .addJavaDocLine(" * This field was generated by MyBatis Generator."); //$NON-NLS-1$
+
+        sb.append(" * This field corresponds to the database table "); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable());
+        field.addJavaDocLine(sb.toString());
+
+        addJavadocTag(field, false);
+
+        field.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
-    @Override
-    public void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable) {
-        super.addGeneralMethodComment(method, introspectedTable);
+    /**
+     * Model 类注释
+     *
+     * @param topLevelClass     类
+     * @param introspectedTable 表
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 14:15
+     */
+    public void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        if (suppressAllComments  || !addRemarkComments) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        topLevelClass.addJavaDocLine("/**"); //$NON-NLS-1$
+
+        String remarks = introspectedTable.getRemarks();
+        if (addRemarkComments && StringUtility.stringHasValue(remarks)) {
+            topLevelClass.addJavaDocLine(" * Database Table Remarks:");
+            String[] remarkLines = remarks.split(System.getProperty("line.separator"));  //$NON-NLS-1$
+            for (String remarkLine : remarkLines) {
+                topLevelClass.addJavaDocLine(" *   " + remarkLine);  //$NON-NLS-1$
+            }
+        }
+        topLevelClass.addJavaDocLine(" *"); //$NON-NLS-1$
+
+        topLevelClass
+                .addJavaDocLine(" * This class was generated by MyBatis Generator."); //$NON-NLS-1$
+
+        sb.append(" * This class corresponds to the database table "); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable());
+        topLevelClass.addJavaDocLine(sb.toString());
+
+        addJavadocTag(topLevelClass, true);
+
+        topLevelClass.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
-    @Override
+    /**
+     * 添加内部类注释.
+     *
+     * @param innerClass        类
+     * @param introspectedTable 表
+     */
+    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
+        if (suppressAllComments) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        innerClass.addJavaDocLine("/**"); //$NON-NLS-1$
+        innerClass
+                .addJavaDocLine(" * This class was generated by MyBatis Generator."); //$NON-NLS-1$
+
+        sb.append(" * This class corresponds to the database table "); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable());
+        innerClass.addJavaDocLine(sb.toString());
+
+        addJavadocTag(innerClass, false);
+
+        innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
+    }
+
+    /**
+     * 添加内部类注释.
+     *
+     * @param innerClass        内部类
+     * @param introspectedTable 表
+     * @param markAsDoNotDelete 是否标记为不能删除
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 14:00
+     */
+    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
+        if (suppressAllComments) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        innerClass.addJavaDocLine("/**"); //$NON-NLS-1$
+        innerClass
+                .addJavaDocLine(" * This class was generated by MyBatis Generator."); //$NON-NLS-1$
+
+        sb.append(" * This class corresponds to the database table "); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable());
+        innerClass.addJavaDocLine(sb.toString());
+
+        addJavadocTag(innerClass, markAsDoNotDelete);
+
+        innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
+    }
+
+    /**
+     * 添加内部枚举类注释
+     *
+     * @param innerEnum         枚举
+     * @param introspectedTable 表
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 13:58
+     */
+    public void addEnumComment(InnerEnum innerEnum, IntrospectedTable introspectedTable) {
+        if (suppressAllComments) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        innerEnum.addJavaDocLine("/**"); //$NON-NLS-1$
+        innerEnum
+                .addJavaDocLine(" * This enum was generated by MyBatis Generator."); //$NON-NLS-1$
+
+        sb.append(" * This enum corresponds to the database table "); //$NON-NLS-1$
+        sb.append(introspectedTable.getFullyQualifiedTable());
+        innerEnum.addJavaDocLine(sb.toString());
+
+        addJavadocTag(innerEnum, false);
+
+        innerEnum.addJavaDocLine(" */"); //$NON-NLS-1$
+    }
+
+    /**
+     * 添加 getter 方法注释.
+     *
+     * @param method             方法
+     * @param introspectedTable  表
+     * @param introspectedColumn 列
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 13:47
+     */
     public void addGetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
-        super.addGetterComment(method, introspectedTable, introspectedColumn);
-    }
-
-    @Override
-    public void addSetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
         if (suppressAllComments) {
             return;
         }
@@ -130,15 +312,11 @@ public class MagicCommentGenerator extends DefaultCommentGenerator {
 
         method.addJavaDocLine("/**"); //$NON-NLS-1$
 
-        Parameter parm = method.getParameters().get(0);
-        sb.append(" * @param "); //$NON-NLS-1$
-        sb.append(parm.getName());
-        sb.append("  "); //$NON-NLS-1$
-        sb.append(introspectedColumn.getRemarks());
-        method.addJavaDocLine(sb.toString());
+        method.addJavaDocLine(" * 获取 " + introspectedColumn.getRemarks()); //$NON-NLS-1$
+        method.addJavaDocLine(" *");
 
         sb.setLength(0);
-        sb.append("* ");
+        sb.append(" * @return "); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTable());
         sb.append('.');
         sb.append(introspectedColumn.getActualColumnName());
@@ -149,8 +327,222 @@ public class MagicCommentGenerator extends DefaultCommentGenerator {
         method.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
-    @Override
-    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
-        super.addClassComment(innerClass, introspectedTable, markAsDoNotDelete);
+    /**
+     * 添加 setter 方法注释.
+     *
+     * @param method             方法
+     * @param introspectedTable  表
+     * @param introspectedColumn 列
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 13:46
+     */
+    public void addSetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
+        if (suppressAllComments) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        method.addJavaDocLine("/**"); //$NON-NLS-1$
+        method.addJavaDocLine(" * 设置 " + introspectedColumn.getRemarks());
+        method.addJavaDocLine(" *");
+
+        sb.append(" * @param "); //$NON-NLS-1$
+        sb.append(method.getParameters().get(0));
+        sb.append("  "); //$NON-NLS-1$
+        sb.append(introspectedColumn.getRemarks());
+        method.addJavaDocLine(sb.toString());
+
+        sb.setLength(0);
+        sb.append(" * ");
+        sb.append(introspectedTable.getFullyQualifiedTable());
+        sb.append('.');
+        sb.append(introspectedColumn.getActualColumnName());
+        method.addJavaDocLine(sb.toString());
+
+        addJavadocTag(method, false);
+
+        method.addJavaDocLine(" */"); //$NON-NLS-1$
+    }
+
+    /**
+     * 添加方法注释.
+     *
+     * @param method            方法
+     * @param introspectedTable 表
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 13:55
+     */
+    public void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable) {
+        if (suppressAllComments) {
+            return;
+        }
+
+        // 方法注释
+        String methodComm = "";
+        // 参数
+        List<Parameter> paramList = method.getParameters();
+        // 参数注释
+        List<String> paramCommList = new ArrayList<>();
+        paramList.forEach(it -> paramCommList.add(""));
+
+        if ("deleteByPrimaryKey".equals(method.getName())) {
+            methodComm = "通过主键删除";
+            paramCommList.add(0, "主键");
+        } else if ("insert".equals(method.getName())) {
+            methodComm = "插入";
+            paramCommList.add(0, "插入数据");
+        } else if ("insertSelective".equals(method.getName())) {
+            methodComm = "选择性插入(只插入非 null 数据)";
+            paramCommList.add(0, "插入数据");
+        } else if ("selectByPrimaryKey".equals(method.getName())) {
+            methodComm = "通过主键查询";
+            paramCommList.add(0, "主键");
+        } else if ("updateByPrimaryKey".equals(method.getName())) {
+            methodComm = "通过主键更新";
+            paramCommList.add(0, "更新数据");
+        } else if ("updateByPrimaryKeySelective".equals(method.getName())) {
+            methodComm = "通过主键选择性更新(只更新非 null 数据)";
+            paramCommList.add(0, "更新数据");
+        } else if ("selectAll".equals(method.getName())) {
+            methodComm = "查询全部";
+        } else if ("countByExample".equals(method.getName())) {
+            methodComm = "通过 ClauseExample 条件统计数量";
+            paramCommList.add(0, "条件");
+        } else if ("deleteByExample".equals(method.getName())) {
+            methodComm = "通过 ClauseExample 条件删除";
+            paramCommList.add(0, "条件");
+            paramCommList.add(1, "查询列");
+        } else if ("selectByExample".equals(method.getName())) {
+            methodComm = "通过 ClauseExample 条件查询";
+            paramCommList.add(0, "条件");
+            paramCommList.add(1, "查询列");
+        } else if ("updateByExampleSelective".equals(method.getName())) {
+            methodComm = "通过 ClauseExample 条件选择性更新(只更新非 null 数据)";
+            paramCommList.add(0, "更新数据");
+            paramCommList.add(1, "条件");
+        } else if ("updateByExample".equals(method.getName())) {
+            methodComm = "通过 ClauseExample 条件更新";
+            paramCommList.add(0, "更新数据");
+            paramCommList.add(1, "条件");
+        } else if ("selectByExampleWithBLOBs".equals(method.getName())) {
+            methodComm = "通过 ClauseExample 条件查询(含BLOBs)";
+            paramCommList.add(0, "条件");
+            paramCommList.add(1, "查询列");
+        } else if ("updateByExampleWithBLOBs".equals(method.getName())) {
+            methodComm = "通过 ClauseExample 条件更新(含BLOBs)";
+            paramCommList.add(0, "更新数据");
+            paramCommList.add(1, "条件");
+        } else if ("updateByPrimaryKeyWithBLOBs".equals(method.getName())) {
+            methodComm = "通过主键更新(含BLOBs)";
+            paramCommList.add(0, "更新数据");
+        }
+
+        method.addJavaDocLine("/**");
+        method.addJavaDocLine(" * " + methodComm);
+
+        if (!paramList.isEmpty()) {
+            method.addJavaDocLine(" *");
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < paramList.size(); i++) {
+                sb.setLength(0);
+                sb.append(" * @param "); //$NON-NLS-1$
+                sb.append(paramList.get(i).getName());
+                sb.append(" "); //$NON-NLS-1$
+                sb.append(paramCommList.get(i));
+                method.addJavaDocLine(sb.toString());
+            }
+        }
+
+
+        method.addJavaDocLine(" *");
+        method.addJavaDocLine(" * @author " + author);
+        method.addJavaDocLine(" * @date " + getDateString());
+
+        method.addJavaDocLine(" */");
+    }
+
+    /**
+     * This method is called to add a file level comment to a generated java file. This method could be used to add a
+     * general file comment (such as a copyright notice). However, note that the Java file merge function in Eclipse
+     * does not deal with this comment. If you run the generator repeatedly, you will only retain the comment from the
+     * initial run.
+     * <p>
+     * <p>
+     * The default implementation does nothing.
+     *
+     * @param compilationUnit the compilation unit
+     */
+    public void addJavaFileComment(CompilationUnit compilationUnit) {
+
+    }
+
+    /**
+     * This method should add a suitable comment as a child element of the specified xmlElement to warn users that the
+     * element was generated and is subject to regeneration.
+     *
+     * @param xmlElement the xml element
+     */
+    public void addComment(XmlElement xmlElement) {
+
+    }
+
+    /**
+     * This method is called to add a comment as the first child of the root element. This method could be used to add a
+     * general file comment (such as a copyright notice). However, note that the XML file merge function does not deal
+     * with this comment. If you run the generator repeatedly, you will only retain the comment from the initial run.
+     * <p>
+     * <p>
+     * The default implementation does nothing.
+     *
+     * @param rootElement the root element
+     */
+    public void addRootComment(XmlElement rootElement) {
+
+    }
+
+    /**
+     * 添加自定义javadoc标签
+     * @param javaElement 元素
+     * @param markAsDoNotDelete 是否标记为不能删除
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 11:58
+     */
+    protected void addJavadocTag(JavaElement javaElement,
+                                 boolean markAsDoNotDelete) {
+
+        javaElement.addJavaDocLine(" *"); //$NON-NLS-1$
+        StringBuilder sb = new StringBuilder();
+        sb.append(" * "); //$NON-NLS-1$
+        sb.append(MergeConstants.NEW_ELEMENT_TAG);
+        if (markAsDoNotDelete) {
+            sb.append(" 合并时不删除 "); //$NON-NLS-1$
+        }
+        String s = getDateString();
+        if (s != null) {
+            sb.append(' ');
+            sb.append(s);
+        }
+        javaElement.addJavaDocLine(sb.toString());
+    }
+
+    /**
+     * 获取当前日期
+     * @return yyyy-MM-dd
+     *
+     * @author  lvcyong
+     * @date    2017/9/26 11:47
+     */
+    protected String getDateString() {
+        if (suppressDate) {
+            return null;
+        } else if (dateFormat != null) {
+            return dateFormat.format(new Date());
+        } else {
+            return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm"));
+        }
     }
 }

@@ -11,7 +11,18 @@
 
     <artifactId>magic-mybatis-generator-test</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-typehandlers-jsr310</artifactId>
+            <version>${mybatis-typehandlers-jsr310.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

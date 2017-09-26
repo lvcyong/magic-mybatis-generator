@@ -7,7 +7,7 @@
 <generatorConfiguration>
 
     <!-- 引入属性文件 -->
-    <properties resource="generatorConfig.properties"/>
+    <properties resource="generatorConfig.properties" />
 
     <classPathEntry location="${class_path_entry}" />
 
