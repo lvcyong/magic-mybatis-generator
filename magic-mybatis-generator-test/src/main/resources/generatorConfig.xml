@@ -65,10 +65,14 @@
             <property name="useLegacyBuilder" value="${client_useLegacyBuilder}" />
         </javaClientGenerator>
 
-        <table schema="${table_schema}" catalog="${table_catalog}" alias="${table_alias}"
+        <!--<table schema="${table_schema}" catalog="${table_catalog}" alias="${table_alias}"
                tableName="fs_directory" domainObjectName="directory."
                mapperName="directory.DirectoryMapper" sqlProviderName="directory.DirectorySqlProvider">
-            <!--默认为false，如果设置为true，在生成的SQL中，table名字不会加上catalog或schema；-->
+            &lt;!&ndash;默认为false，如果设置为true，在生成的SQL中，table名字不会加上catalog或schema；&ndash;&gt;
+            <property name="ignoreQualifiersAtRuntime" value="${table_ignoreQualifiersAtRuntime}"/>
+        </table>-->
+        
+        <table tableName="${table_tableName}" schema="${table_schema}">
             <property name="ignoreQualifiersAtRuntime" value="${table_ignoreQualifiersAtRuntime}"/>
         </table>
 
