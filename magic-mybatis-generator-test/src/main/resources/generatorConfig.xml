@@ -21,9 +21,10 @@
         <property name="beginningDelimiter" value="${beginning_delimiter}" />
         <property name="endingDelimiter" value="${ending_delimiter}" />
 
-        <!--<plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
-            <property name="" value="" />
-        </plugin>-->
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$" />
+            <property name="replaceString" value="Criteria" />
+        </plugin>
 
         <commentGenerator type="com.magic.generator.plugins.comment.MagicCommentGenerator">
             <property name="suppressAllComments" value="${suppress_all_comments}" />
