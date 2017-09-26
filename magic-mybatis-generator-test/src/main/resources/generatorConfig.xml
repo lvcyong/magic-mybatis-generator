@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<!-- http://blog.csdn.net/isea533/article/details/42102297 -->
+<generatorConfiguration>
+
+    <!-- 引入属性文件 -->
+    <properties resource="generatorConfig.properties"/>
+
+    <classPathEntry location="${class_path_entry}" />
+
+    <context id="MysqlTables" targetRuntime="${target_runtime}" defaultModelType="${default_model_type}"
+             introspectedColumnImpl="${introspected_column_impl}">
+
+        <property name="autoDelimitKeywords" value="${auto_delimit_keywords}" />
+        <property name="javaFileEncoding" value="${java_file_encoding}" />
+        <property name="javaFormatter" value="${java_formatter}" />
+        <property name="xmlFormatter" value="${xml_formatter}" />
+        <property name="beginningDelimiter" value="${beginning_delimiter}" />
+        <property name="endingDelimiter" value="${ending_delimiter}" />
+
+        <!--<plugin type="org.mybatis.generator.plugins.MapperConfigPlugin">
+            <property name="" value="" />
+        </plugin>-->
+
+        <commentGenerator type="com.lvcyong.magic.generator.plugins.comment.MagicCommentGenerator">
+            <property name="suppressAllComments" value="${suppress_all_comments}" />
+            <property name="suppressDate" value="${suppress_date}" />
+        </commentGenerator>
+
+        <jdbcConnection driverClass="${driver_class}"
+                        connectionURL="${connection_url}"
+                        userId="${user_id}"
+                        password="${password}">
+            <!--<property name="" value="" />-->
+        </jdbcConnection>
+
+        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+            <property name="forceBigDecimals" value="${forceBigDecimals}" />
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="${model_target_package}" targetProject="${model_target_project}">
+            <property name="enableSubPackages" value="${model_enableSubPackages}" />
+            <property name="constructorBased" value="${model_constructorBased}" />
+            <property name="immutable" value="${model_immutable}" />
+            <property name="rootClass" value="${model_rootClass}" />
+            <property name="trimStrings" value="${model_trimStrings}" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="${map_target_package}"  targetProject="${map_target_project}">
+            <property name="enableSubPackages" value="${map_enableSubPackages}" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="${client_type}" implementationPackage="${client_implementationPackage}"
+                             targetPackage="${client_target_package}" targetProject="${client_target_project}">
+            <property name="enableSubPackages" value="${client_enableSubPackages}" />
+            <property name="exampleMethodVisibility" value="${client_exampleMethodVisibility}" />
+            <property name="methodNameCalculator" value="${client_methodNameCalculator}" />
+            <property name="rootInterface" value="${client_rootInterface}" />
+            <property name="useLegacyBuilder" value="${client_useLegacyBuilder}" />
+        </javaClientGenerator>
+
+        <table schema="${table_schema}" catalog="${table_catalog}" alias="${table_alias}"
+               tableName="fs_directory" domainObjectName="directory."
+               mapperName="directory.DirectoryMapper" sqlProviderName="directory.DirectorySqlProvider">
+            <!--默认为false，如果设置为true，在生成的SQL中，table名字不会加上catalog或schema；-->
+            <property name="ignoreQualifiersAtRuntime" value="${table_ignoreQualifiersAtRuntime}"/>
+        </table>
+
+    </context>
+</generatorConfiguration>
