@@ -417,7 +417,7 @@ public class Restrictions {
          * @author  lvcyong
          * @date    2017/4/11 10:52
          */
-        public Criteria startWith(String column, String value) {
+        /*public Criteria startWith(String column, String value) {
             if (value == null) {
 //                throw new RuntimeException("Value for " + column + " cannot be null");
                 return (Criteria) this;
@@ -426,7 +426,7 @@ public class Restrictions {
             addCriterion(column + LIKE, value + "%");
 
             return (Criteria) this;
-        }
+        }*/
 
         /**
          * 结束以 column like %value
@@ -437,7 +437,7 @@ public class Restrictions {
          * @author  lvcyong
          * @date    2017/4/11 10:52
          */
-        public Criteria endWith(String column, String value) {
+        /*public Criteria endWith(String column, String value) {
             if (value == null) {
 //                throw new RuntimeException("Value for " + column + " cannot be null");
                 return (Criteria) this;
@@ -446,7 +446,7 @@ public class Restrictions {
             addCriterion(column + LIKE, "%" + value);
 
             return (Criteria) this;
-        }
+        }*/
 
         /**
          * 包含 column like %value%
@@ -457,13 +457,17 @@ public class Restrictions {
          * @author  lvcyong
          * @date    2017/4/11 10:52
          */
-        public Criteria like(String column, String value) {
+        public Criteria like(String column, String value, MatchMode matchMode) {
             if (value == null) {
 //                throw new RuntimeException("Value for " + column + " cannot be null");
                 return (Criteria) this;
             }
 
-            addCriterion(column + LIKE, "%" + value + "%");
+            if (matchMode == null) {
+                matchMode = MatchMode.EXACT;
+            }
+
+            addCriterion(column + LIKE, matchMode.toMatchString(value));
 
             return (Criteria) this;
         }
@@ -477,13 +481,17 @@ public class Restrictions {
          * @author  lvcyong
          * @date    2017/4/11 10:52
          */
-        public Criteria notLike(String column, String value) {
+        public Criteria notLike(String column, String value, MatchMode matchMode) {
             if (value == null) {
 //                throw new RuntimeException("Value for " + column + " cannot be null");
                 return (Criteria) this;
             }
 
-            addCriterion(column + NOT_LIKE, "%" + value + "%");
+            if (matchMode == null) {
+                matchMode = MatchMode.EXACT;
+            }
+
+            addCriterion(column + NOT_LIKE, matchMode.toMatchString(value));
 
             return (Criteria) this;
         }
