@@ -25,7 +25,7 @@
             <property name="" value="" />
         </plugin>-->
 
-        <commentGenerator type="com.lvcyong.magic.generator.plugins.comment.MagicCommentGenerator">
+        <commentGenerator type="com.magic.generator.plugins.comment.MagicCommentGenerator">
             <property name="suppressAllComments" value="${suppress_all_comments}" />
             <property name="suppressDate" value="${suppress_date}" />
         </commentGenerator>

@@ -1,4 +1,4 @@
-package com.lvcyong.magic.generator.plugins.comment;
+package com.magic.generator.plugins.comment;
 
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
