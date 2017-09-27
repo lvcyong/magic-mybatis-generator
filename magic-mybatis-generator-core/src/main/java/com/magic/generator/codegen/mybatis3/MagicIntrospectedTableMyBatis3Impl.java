@@ -6,10 +6,14 @@ import com.magic.generator.codegen.mybatis3.javamapper.MagicMixedClientGenerator
 import com.magic.generator.enums.MapperType;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
+import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
+import org.mybatis.generator.codegen.mybatis3.model.ExampleGenerator;
 import org.mybatis.generator.internal.ObjectFactory;
+import org.mybatis.generator.internal.util.StringUtility;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <br>Filename:    MagicIntrospectedTableMyBatis3Impl  <br>
@@ -26,6 +30,23 @@ import java.util.List;
  * 2017-09-26    lvcyong      1.0         1.0 Version  <br>
  */
 public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
+
+    /**
+     * 计算 java model 生成.
+     *
+     * @param warnings         the warnings
+     * @param progressCallback
+     */
+    @Override
+    protected void calculateJavaModelGenerators(List<String> warnings, ProgressCallback progressCallback) {
+        super.calculateJavaModelGenerators(warnings, progressCallback);
+
+        // 移除 ExampleGenerator
+        List<AbstractJavaGenerator> removes = javaModelGenerators.stream().
+                filter(it -> it instanceof ExampleGenerator).collect(Collectors.toList());
+
+        javaModelGenerators.removeAll(removes);
+    }
 
     /**
      * 计算 mapper 生成.
@@ -96,5 +117,16 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
         }
 
         return javaGenerator;
+    }
+
+    @Override
+    public void setExampleType(String exampleType) {
+        if (context.getJavaClientGeneratorConfiguration() != null) {
+            String type = context.getJavaClientGeneratorConfiguration().getProperty("exampleType");
+            if (StringUtility.stringHasValue(type.trim())) {
+                exampleType = type.trim();
+            }
+        }
+        super.setExampleType(exampleType);
     }
 }

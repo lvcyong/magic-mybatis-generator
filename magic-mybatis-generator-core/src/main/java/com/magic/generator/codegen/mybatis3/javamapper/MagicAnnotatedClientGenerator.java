@@ -1,6 +1,9 @@
 package com.magic.generator.codegen.mybatis3.javamapper;
 
+import com.magic.generator.codegen.mybatis3.javamapper.elements.annotated.MagicAnnotatedSelectByExampleWithoutBLOBsMethodGenerator;
+import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerator;
+import org.mybatis.generator.codegen.mybatis3.javamapper.elements.AbstractJavaMapperMethodGenerator;
 
 /**
  * <br>Filename:    MagicAnnotatedClientGenerator  <br>
@@ -17,4 +20,11 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerato
  * 2017-09-27    lvcyong      1.0         1.0 Version  <br>
  */
 public class MagicAnnotatedClientGenerator extends AnnotatedClientGenerator {
+    @Override
+    protected void addSelectByExampleWithoutBLOBsMethod(Interface interfaze) {
+        if (introspectedTable.getRules().generateSelectByExampleWithoutBLOBs()) {
+            AbstractJavaMapperMethodGenerator methodGenerator = new MagicAnnotatedSelectByExampleWithoutBLOBsMethodGenerator();
+            initializeAndExecuteGenerator(methodGenerator, interfaze);
+        }
+    }
 }
