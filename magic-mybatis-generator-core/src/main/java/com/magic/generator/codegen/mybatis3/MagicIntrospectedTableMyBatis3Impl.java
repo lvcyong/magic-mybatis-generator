@@ -1,8 +1,13 @@
 package com.magic.generator.codegen.mybatis3;
 
+import com.magic.generator.enums.MapperType;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
+import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerator;
+import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
+import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
+import org.mybatis.generator.internal.ObjectFactory;
 
 import java.util.List;
 
@@ -25,9 +30,12 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
     /**
      * 计算 mapper 生成.
      *
-     * @param javaClientGenerator the java client generator
+     * @param javaClientGenerator java mapper 生成
      * @param warnings            the warnings
-     * @param progressCallback
+     * @param progressCallback  进度回调
+     *
+     * @author  lvcyong
+     * @date    2017/9/27 13:55
      */
     @Override
     protected void calculateXmlMapperGenerator(AbstractJavaClientGenerator javaClientGenerator, List<String> warnings, ProgressCallback progressCallback) {
@@ -54,5 +62,39 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
         setBaseColumnListId("Base_Column_List"); //$NON-NLS-1$
         setBlobColumnListId("Blob_Column_List"); //$NON-NLS-1$
         setMyBatis3UpdateByExampleWhereClauseId("Update_By_Criteria_Where_Clause"); //$NON-NLS-1$
+    }
+
+    /**
+     * 创建 java mapper 生成.
+     *
+     * @return AbstractJavaClientGenerator
+     *
+     * @author  lvcyong
+     * @date    2017/9/27 13:57
+     */
+    @Override
+    protected AbstractJavaClientGenerator createJavaClientGenerator() {
+        if (context.getJavaClientGeneratorConfiguration() == null) {
+            return null;
+        }
+
+        String type = context.getJavaClientGeneratorConfiguration()
+                .getConfigurationType();
+
+        AbstractJavaClientGenerator javaGenerator;
+        if (MapperType.XMLMAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new JavaMapperGenerator();
+        } else if (MapperType.MIXEDMAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new MixedClientGenerator();
+        } else if (MapperType.ANNOTATEDMAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new AnnotatedClientGenerator();
+        } else if (MapperType.MAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new JavaMapperGenerator();
+        } else {
+            javaGenerator = (AbstractJavaClientGenerator) ObjectFactory
+                    .createInternalObject(type);
+        }
+
+        return javaGenerator;
     }
 }
