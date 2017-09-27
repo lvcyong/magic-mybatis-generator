@@ -119,6 +119,10 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
         return javaGenerator;
     }
 
+    /**
+     * 设置 example 类型
+     * @param exampleType 类型
+     */
     @Override
     public void setExampleType(String exampleType) {
         if (context.getJavaClientGeneratorConfiguration() != null) {
@@ -128,5 +132,26 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
             }
         }
         super.setExampleType(exampleType);
+    }
+
+    /**
+     * 设置 BLOBs 类型
+     * @param recordWithBLOBsType 类型
+     */
+    @Override
+    public void setRecordWithBLOBsType(String recordWithBLOBsType) {
+        internalAttributes.put(InternalAttribute.ATTR_RECORD_WITH_BLOBS_TYPE,
+                recordWithBLOBsType);
+    }
+
+    /**
+     * 设置 Provider 类型
+     * @param mybatis3SqlProviderType 类型
+     */
+    @Override
+    public void setMyBatis3SqlProviderType(String mybatis3SqlProviderType) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_SQL_PROVIDER_TYPE,
+                mybatis3SqlProviderType);
     }
 }
