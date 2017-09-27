@@ -64,6 +64,7 @@
             <property name="methodNameCalculator" value="${client_methodNameCalculator}" />
             <property name="rootInterface" value="${client_rootInterface}" />
             <property name="useLegacyBuilder" value="${client_useLegacyBuilder}" />
+            <property name="exampleType" value="${client_exampleType}" />
         </javaClientGenerator>
 
         <!--<table schema="${table_schema}" catalog="${table_catalog}" alias="${table_alias}"
