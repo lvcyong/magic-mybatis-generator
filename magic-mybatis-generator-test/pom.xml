@@ -16,11 +16,13 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>${mybatis.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-typehandlers-jsr310</artifactId>
             <version>${mybatis-typehandlers-jsr310.version}</version>
+            <scope>provided</scope>
         </dependency>
         <!--<dependency>
             <groupId>org.hibernate</groupId>
