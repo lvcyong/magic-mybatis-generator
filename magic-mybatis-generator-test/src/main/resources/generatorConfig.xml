@@ -26,7 +26,7 @@
             <property name="replaceString" value="Criteria" />
         </plugin>-->
 
-        <commentGenerator type="com.magic.generator.plugins.comment.MagicCommentGenerator">
+        <commentGenerator type="${commentGeneratorType}">
             <property name="suppressAllComments" value="${suppress_all_comments}" />
             <property name="suppressDate" value="${suppress_date}" />
             <property name="dateFormat" value="${dateFormat}" />
