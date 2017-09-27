@@ -34,14 +34,14 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
         super.calculateXmlMapperGenerator(javaClientGenerator, warnings, progressCallback);
 
         setCountByExampleStatementId("countByCriteria"); //$NON-NLS-1$
-        setDeleteByExampleStatementId("deleteByCriteria"); //$NON-NLS-1$
-        setDeleteByPrimaryKeyStatementId("deleteByPrimaryKey"); //$NON-NLS-1$
-        setInsertStatementId("insert"); //$NON-NLS-1$
-        setInsertSelectiveStatementId("insertSelective"); //$NON-NLS-1$
-        setSelectAllStatementId("selectAll"); //$NON-NLS-1$
-        setSelectByExampleStatementId("selectByCriteria"); //$NON-NLS-1$
-        setSelectByExampleWithBLOBsStatementId("selectByCriteriaWithBLOBs"); //$NON-NLS-1$
-        setSelectByPrimaryKeyStatementId("selectByPrimaryKey"); //$NON-NLS-1$
+        setDeleteByExampleStatementId("removeByCriteria"); //$NON-NLS-1$
+        setDeleteByPrimaryKeyStatementId("removeByPrimaryKey"); //$NON-NLS-1$
+        setInsertStatementId("save"); //$NON-NLS-1$
+        setInsertSelectiveStatementId("saveSelective"); //$NON-NLS-1$
+        setSelectAllStatementId("listAll"); //$NON-NLS-1$
+        setSelectByExampleStatementId("listByCriteria"); //$NON-NLS-1$
+        setSelectByExampleWithBLOBsStatementId("listByCriteriaWithBLOBs"); //$NON-NLS-1$
+        setSelectByPrimaryKeyStatementId("getByPrimaryKey"); //$NON-NLS-1$
         setUpdateByExampleStatementId("updateByCriteria"); //$NON-NLS-1$
         setUpdateByExampleSelectiveStatementId("updateByCriteriaSelective"); //$NON-NLS-1$
         setUpdateByExampleWithBLOBsStatementId("updateByCriteriaWithBLOBs"); //$NON-NLS-1$
