@@ -1,12 +1,12 @@
 package com.magic.generator.codegen.mybatis3;
 
+import com.magic.generator.codegen.mybatis3.javamapper.MagicAnnotatedClientGenerator;
+import com.magic.generator.codegen.mybatis3.javamapper.MagicJavaMapperGenerator;
+import com.magic.generator.codegen.mybatis3.javamapper.MagicMixedClientGenerator;
 import com.magic.generator.enums.MapperType;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
-import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerator;
-import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
-import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
 import org.mybatis.generator.internal.ObjectFactory;
 
 import java.util.List;
@@ -83,13 +83,13 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
 
         AbstractJavaClientGenerator javaGenerator;
         if (MapperType.XMLMAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
-            javaGenerator = new JavaMapperGenerator();
+            javaGenerator = new MagicJavaMapperGenerator();
         } else if (MapperType.MIXEDMAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
-            javaGenerator = new MixedClientGenerator();
+            javaGenerator = new MagicMixedClientGenerator();
         } else if (MapperType.ANNOTATEDMAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
-            javaGenerator = new AnnotatedClientGenerator();
+            javaGenerator = new MagicAnnotatedClientGenerator();
         } else if (MapperType.MAPPER.getType().equalsIgnoreCase(type)) { //$NON-NLS-1$
-            javaGenerator = new JavaMapperGenerator();
+            javaGenerator = new MagicJavaMapperGenerator();
         } else {
             javaGenerator = (AbstractJavaClientGenerator) ObjectFactory
                     .createInternalObject(type);
