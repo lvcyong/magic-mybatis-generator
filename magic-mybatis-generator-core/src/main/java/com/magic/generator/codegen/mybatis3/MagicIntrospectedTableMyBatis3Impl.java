@@ -3,12 +3,17 @@ package com.magic.generator.codegen.mybatis3;
 import com.magic.generator.codegen.mybatis3.javamapper.MagicAnnotatedClientGenerator;
 import com.magic.generator.codegen.mybatis3.javamapper.MagicJavaMapperGenerator;
 import com.magic.generator.codegen.mybatis3.javamapper.MagicMixedClientGenerator;
+import com.magic.generator.codegen.mybatis3.model.MagicBaseRecordGenerator;
+import com.magic.generator.codegen.mybatis3.model.MagicPrimaryKeyGenerator;
 import com.magic.generator.enums.MapperType;
+import com.magic.generator.internal.rules.HibernateModelRules;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
+import org.mybatis.generator.codegen.mybatis3.model.BaseRecordGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.ExampleGenerator;
+import org.mybatis.generator.codegen.mybatis3.model.PrimaryKeyGenerator;
 import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.util.StringUtility;
 
@@ -34,6 +39,18 @@ import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis3Impl {
 
     /**
+     * Initialize.
+     */
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        if ("true".equals(context.getProperty("hibernate_model_type"))) {
+            rules = new HibernateModelRules(this);
+        }
+    }
+
+    /**
      * 计算 java model 生成.
      *
      * @param warnings         the warnings
@@ -44,10 +61,40 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
         super.calculateJavaModelGenerators(warnings, progressCallback);
 
         // 移除 ExampleGenerator
-        List<AbstractJavaGenerator> removes = javaModelGenerators.stream().
-                filter(it -> it instanceof ExampleGenerator).collect(Collectors.toList());
+        List<AbstractJavaGenerator> removes = javaModelGenerators.stream()
+                .filter(it -> it instanceof ExampleGenerator)
+                .collect(Collectors.toList());
 
-        javaModelGenerators.removeAll(removes);
+        if (removes != null && !removes.isEmpty()) {
+            javaModelGenerators.removeAll(removes);
+        }
+
+        if (rules instanceof HibernateModelRules) {
+            // 移除原来的
+            removes = javaModelGenerators.stream().
+                    filter(it -> (it instanceof PrimaryKeyGenerator
+                            || it instanceof BaseRecordGenerator))
+                    .collect(Collectors.toList());
+
+            if (removes != null && !removes.isEmpty()) {
+                javaModelGenerators.removeAll(removes);
+            }
+
+            // 添加新的
+            if (getRules().generatePrimaryKeyClass()) {
+                AbstractJavaGenerator javaGenerator = new MagicPrimaryKeyGenerator();
+                initializeAbstractGenerator(javaGenerator, warnings,
+                        progressCallback);
+                javaModelGenerators.add(javaGenerator);
+            }
+
+            if (getRules().generateBaseRecordClass()) {
+                AbstractJavaGenerator javaGenerator = new MagicBaseRecordGenerator();
+                initializeAbstractGenerator(javaGenerator, warnings,
+                        progressCallback);
+                javaModelGenerators.add(javaGenerator);
+            }
+        }
     }
 
     /**
@@ -119,6 +166,22 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
         }
 
         return javaGenerator;
+    }
+
+    /**
+     * Sets the primary key type.
+     *
+     * @param primaryKeyType the new primary key type
+     */
+    @Override
+    public void setPrimaryKeyType(String primaryKeyType) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(calculateJavaModelPackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("PK"); //$NON-NLS-1$
+
+        super.setPrimaryKeyType(sb.toString());
     }
 
     /**
