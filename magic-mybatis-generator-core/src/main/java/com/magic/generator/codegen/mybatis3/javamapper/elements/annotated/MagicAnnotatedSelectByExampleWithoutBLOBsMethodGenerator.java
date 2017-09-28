@@ -69,6 +69,9 @@ public class MagicAnnotatedSelectByExampleWithoutBLOBsMethodGenerator
 
         addMapperAnnotations(interfaze, method);
 
+        // 导入 provider
+        importedTypes.add(new FullyQualifiedJavaType(introspectedTable.getMyBatis3SqlProviderType()));
+
         if (context.getPlugins()
                 .clientSelectByExampleWithoutBLOBsMethodGenerated(method,
                         interfaze, introspectedTable)) {

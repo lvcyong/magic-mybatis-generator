@@ -15,6 +15,8 @@ import org.mybatis.generator.internal.util.StringUtility;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
 /**
  * <br>Filename:    MagicIntrospectedTableMyBatis3Impl  <br>
  * Description:
@@ -127,7 +129,7 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
     public void setExampleType(String exampleType) {
         if (context.getJavaClientGeneratorConfiguration() != null) {
             String type = context.getJavaClientGeneratorConfiguration().getProperty("exampleType");
-            if (StringUtility.stringHasValue(type.trim())) {
+            if (type != null && StringUtility.stringHasValue(type.trim())) {
                 exampleType = type.trim();
             }
         }
@@ -140,8 +142,15 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
      */
     @Override
     public void setRecordWithBLOBsType(String recordWithBLOBsType) {
-        internalAttributes.put(InternalAttribute.ATTR_RECORD_WITH_BLOBS_TYPE,
-                recordWithBLOBsType);
+        StringBuilder sb = new StringBuilder();
+        sb.append(calculateJavaModelPackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("Blob"); //$NON-NLS-1$
+
+        recordWithBLOBsType = sb.toString();
+
+        super.setRecordWithBLOBsType(recordWithBLOBsType);
     }
 
     /**
@@ -150,8 +159,29 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
      */
     @Override
     public void setMyBatis3SqlProviderType(String mybatis3SqlProviderType) {
-        internalAttributes.put(
-                InternalAttribute.ATTR_MYBATIS3_SQL_PROVIDER_TYPE,
-                mybatis3SqlProviderType);
+        if (context.getJavaClientGeneratorConfiguration() != null) {
+            String providerSubPackage = context.getJavaClientGeneratorConfiguration().getProperty("providerSubPackage");
+            if (providerSubPackage != null && StringUtility.stringHasValue(providerSubPackage.trim())) {
+                providerSubPackage = providerSubPackage.trim();
+                if (!".".equals(providerSubPackage)) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(calculateJavaClientInterfacePackage());
+                    sb.append('.');
+
+                    if (stringHasValue(tableConfiguration.getSqlProviderName())) {
+                        sb.append(tableConfiguration.getSqlProviderName());
+                    } else {
+                        sb.append(providerSubPackage);
+                        sb.append('.');
+                        sb.append(fullyQualifiedTable.getDomainObjectName());
+                        sb.append("SqlProvider"); //$NON-NLS-1$
+                    }
+
+                    mybatis3SqlProviderType = sb.toString();
+                }
+            }
+        }
+
+        super.setMyBatis3SqlProviderType(mybatis3SqlProviderType);
     }
 }

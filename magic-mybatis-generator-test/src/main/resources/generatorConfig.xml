@@ -65,6 +65,7 @@
             <property name="rootInterface" value="${client_rootInterface}" />
             <property name="useLegacyBuilder" value="${client_useLegacyBuilder}" />
             <property name="exampleType" value="${client_exampleType}" />
+            <property name="providerSubPackage" value="${client_providerSubPackage}" />
         </javaClientGenerator>
 
         <!--<table schema="${table_schema}" catalog="${table_catalog}" alias="${table_alias}"
