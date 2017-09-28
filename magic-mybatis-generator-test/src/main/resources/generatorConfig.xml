@@ -20,6 +20,7 @@
         <property name="xmlFormatter" value="${xml_formatter}" />
         <property name="beginningDelimiter" value="${beginning_delimiter}" />
         <property name="endingDelimiter" value="${ending_delimiter}" />
+        <property name="hibernate_model_type" value="${hibernate_model_type}" />
 
         <!--<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
             <property name="searchString" value="Example$" />
