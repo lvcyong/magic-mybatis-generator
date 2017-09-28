@@ -25,6 +25,7 @@
         <commons-lang3.version>3.6</commons-lang3.version>
         <spring-context.version>4.3.5.RELEASE</spring-context.version>
         <lombok.version>1.16.18</lombok.version>
+        <hibernate-core.version>5.2.11.Final</hibernate-core.version>
     </properties>
 
     <dependencies>
