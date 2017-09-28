@@ -1,6 +1,10 @@
 package com.magic.generator.codegen.mybatis3.javamapper;
 
+import com.magic.generator.extract.ExtractMethod;
+import org.mybatis.generator.api.dom.java.CompilationUnit;
 import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
+
+import java.util.List;
 
 /**
  * <br>Filename:    MagicJavaMapperGenerator  <br>
@@ -17,4 +21,13 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
  * 2017-09-27    lvcyong      1.0         1.0 Version  <br>
  */
 public class MagicJavaMapperGenerator extends JavaMapperGenerator {
+
+    @Override
+    public List<CompilationUnit> getCompilationUnits() {
+        List<CompilationUnit> unitList = super.getCompilationUnits();
+
+        ExtractMethod.addAnnotationForJavaMapper(unitList);
+
+        return unitList;
+    }
 }

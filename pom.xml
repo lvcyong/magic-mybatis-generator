@@ -23,6 +23,7 @@
         <mybatis.version>3.4.5</mybatis.version>
         <mybatis-typehandlers-jsr310.version>1.0.2</mybatis-typehandlers-jsr310.version>
         <commons-lang3.version>3.6</commons-lang3.version>
+        <spring-context.version>4.3.5.RELEASE</spring-context.version>
     </properties>
 
     <dependencies>
