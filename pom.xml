@@ -26,6 +26,7 @@
         <spring-context.version>4.3.5.RELEASE</spring-context.version>
         <lombok.version>1.16.18</lombok.version>
         <hibernate-core.version>5.2.11.Final</hibernate-core.version>
+        <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     </properties>
 
     <dependencies>
@@ -41,7 +42,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
