@@ -71,16 +71,16 @@ public class MagicIntrospectedTableMyBatis3Impl extends IntrospectedTableMyBatis
         setInsertSelectiveStatementId("saveSelective"); //$NON-NLS-1$
         setSelectAllStatementId("listAll"); //$NON-NLS-1$
         setSelectByExampleStatementId("listByCriteria"); //$NON-NLS-1$
-        setSelectByExampleWithBLOBsStatementId("listByCriteriaWithBLOBs"); //$NON-NLS-1$
+        setSelectByExampleWithBLOBsStatementId("listByCriteriaBlob"); //$NON-NLS-1$
         setSelectByPrimaryKeyStatementId("getByPrimaryKey"); //$NON-NLS-1$
         setUpdateByExampleStatementId("updateByCriteria"); //$NON-NLS-1$
         setUpdateByExampleSelectiveStatementId("updateByCriteriaSelective"); //$NON-NLS-1$
-        setUpdateByExampleWithBLOBsStatementId("updateByCriteriaWithBLOBs"); //$NON-NLS-1$
+        setUpdateByExampleWithBLOBsStatementId("updateByCriteriaBlob"); //$NON-NLS-1$
         setUpdateByPrimaryKeyStatementId("updateByPrimaryKey"); //$NON-NLS-1$
         setUpdateByPrimaryKeySelectiveStatementId("updateByPrimaryKeySelective"); //$NON-NLS-1$
-        setUpdateByPrimaryKeyWithBLOBsStatementId("updateByPrimaryKeyWithBLOBs"); //$NON-NLS-1$
+        setUpdateByPrimaryKeyWithBLOBsStatementId("updateByPrimaryKeyBlob"); //$NON-NLS-1$
         setBaseResultMapId("BaseResultMap"); //$NON-NLS-1$
-        setResultMapWithBLOBsId("ResultMapWithBLOBs"); //$NON-NLS-1$
+        setResultMapWithBLOBsId("ResultMapBlob"); //$NON-NLS-1$
         setExampleWhereClauseId("Example_Where_Clause"); //$NON-NLS-1$
         setBaseColumnListId("Base_Column_List"); //$NON-NLS-1$
         setBlobColumnListId("Blob_Column_List"); //$NON-NLS-1$
