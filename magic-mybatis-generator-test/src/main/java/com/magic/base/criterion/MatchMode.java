@@ -4,7 +4,7 @@ package com.magic.base.criterion;
  * <br>Filename:    MatchMode  <br>
  * Description:     使用“like”匹配字符串的策略
  * <br>Copyright:   Copyright (c) 2016-2017 All Rights Reserved.<br>
- * Company:     golden-soft.com Inc.<br>
+ * Company:     lvcyong.com Inc.<br>
  * author:     lvcyong <br>
  * version:    1.0  <br>
  * Create at:   2017-09-26 15:51 <br>

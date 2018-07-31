@@ -6,7 +6,7 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
  * <br>Filename:    MagicMixedClientGenerator  <br>
  * Description:
  * <br>Copyright:   Copyright (c) 2016-2017 All Rights Reserved.<br>
- * Company:     golden-soft.com Inc.<br>
+ * Company:     lvcyong.com Inc.<br>
  * author:     lvcyong <br>
  * version:    1.0  <br>
  * Create at:   2017-09-27 14:48 <br>

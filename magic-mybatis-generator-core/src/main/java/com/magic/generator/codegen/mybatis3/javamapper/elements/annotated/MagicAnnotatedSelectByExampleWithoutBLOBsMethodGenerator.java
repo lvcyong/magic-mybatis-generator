@@ -13,7 +13,7 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  * <br>Filename:    MagicAnnotatedSelectByExampleWithoutBLOBsMethodGenerator  <br>
  * Description:
  * <br>Copyright:   Copyright (c) 2016-2017 All Rights Reserved.<br>
- * Company:     golden-soft.com Inc.<br>
+ * Company:     lvcyong.com Inc.<br>
  * author:     lvcyong <br>
  * version:    1.0  <br>
  * Create at:   2017-09-27 15:18 <br>

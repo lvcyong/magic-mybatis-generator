@@ -22,7 +22,7 @@ import static org.mybatis.generator.internal.util.StringUtility.isTrue;
  * <br>Filename:    MagicCommentGenerator  <br>
  * Description:     生成自定义注释
  * <br>Copyright:   Copyright (c) 2016-2017 All Rights Reserved.<br>
- * Company:     golden-soft.com Inc.<br>
+ * Company:     lvcyong.com Inc.<br>
  * author:     lvcyong <br>
  * version:    1.0  <br>
  * Create at:   2017-09-25 11:05 <br>

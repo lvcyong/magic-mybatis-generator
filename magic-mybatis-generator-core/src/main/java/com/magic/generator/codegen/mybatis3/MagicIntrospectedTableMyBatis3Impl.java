@@ -26,7 +26,7 @@ import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
  * <br>Filename:    MagicIntrospectedTableMyBatis3Impl  <br>
  * Description:
  * <br>Copyright:   Copyright (c) 2016-2017 All Rights Reserved.<br>
- * Company:     golden-soft.com Inc.<br>
+ * Company:     lvcyong.com Inc.<br>
  * author:     lvcyong <br>
  * version:    1.0  <br>
  * Create at:   2017-09-26 16:59 <br>

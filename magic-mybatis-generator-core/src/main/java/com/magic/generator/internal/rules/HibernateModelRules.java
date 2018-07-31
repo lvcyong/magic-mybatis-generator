@@ -7,7 +7,7 @@ import org.mybatis.generator.internal.rules.BaseRules;
  * <br>Filename:    HibernateModelRules  <br>
  * Description:
  * <br>Copyright:   Copyright (c) 2016-2017 All Rights Reserved.<br>
- * Company:     golden-soft.com Inc.<br>
+ * Company:     lvcyong.com Inc.<br>
  * author:     lvcyong <br>
  * version:    1.0  <br>
  * Create at:   2017-09-28 17:04 <br>
