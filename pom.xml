@@ -51,4 +51,11 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>localRepository</id>
+            <url>file:E:/Projects/Files/repository/.m2</url>
+        </repository>
+    </distributionManagement>
+
 </project>
