@@ -243,7 +243,7 @@ public class MagicCommentGenerator implements CommentGenerator {
         StringBuilder sb = new StringBuilder();
 
         innerClass.addJavaDocLine("/**"); //$NON-NLS-1$
-        sb.append(" * 该类对应的数据库表为1 ");
+        sb.append(" * 该类对应的数据库表为 ");
         sb.append(introspectedTable.getFullyQualifiedTable());
         innerClass.addJavaDocLine(sb.toString());
 
