@@ -40,6 +40,7 @@
                         userId="${user_id}"
                         password="${password}">
             <!--<property name="" value="" />-->
+            <property name="nullCatalogMeansCurrent" value="${nullCatalogMeansCurrent}"/>
         </jdbcConnection>
 
         <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
