@@ -34,22 +34,34 @@ import static org.mybatis.generator.internal.util.StringUtility.isTrue;
  */
 public class MagicCommentGenerator implements CommentGenerator {
 
-    /** 属性 */
+    /**
+     * 属性
+     */
     private Properties properties;
 
-    /** 是否生成日期注释 */
+    /**
+     * 是否生成日期注释
+     */
     private boolean suppressDate;
 
-    /** 是否生成注释 */
+    /**
+     * 是否生成注释
+     */
     private boolean suppressAllComments;
 
-    /** 是否添加表及字段说明注释 */
+    /**
+     * 是否添加表及字段说明注释
+     */
     private boolean addRemarkComments;
 
-    /** 日式格式化 */
+    /**
+     * 日式格式化
+     */
     private SimpleDateFormat dateFormat;
 
-    /** 注释作者 */
+    /**
+     * 注释作者
+     */
     private String author;
 
     public MagicCommentGenerator() {
