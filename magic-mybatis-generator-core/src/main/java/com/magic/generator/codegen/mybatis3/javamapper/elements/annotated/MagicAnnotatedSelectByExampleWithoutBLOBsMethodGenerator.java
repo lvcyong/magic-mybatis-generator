@@ -56,6 +56,7 @@ public class MagicAnnotatedSelectByExampleWithoutBLOBsMethodGenerator
         method.setReturnType(returnType);
 
         method.setName(introspectedTable.getSelectByExampleStatementId());
+        //FIXME >>>>>>>>>>
         method.addParameter(new Parameter(type,
                 MagicConstants.EXAMPLE_PARAM_NAME,
                 "@Param(\"" + MagicConstants.EXAMPLE_PARAM_NAME + "\")")); //$NON-NLS-1$
@@ -63,14 +64,17 @@ public class MagicAnnotatedSelectByExampleWithoutBLOBsMethodGenerator
         method.addParameter(new Parameter(new FullyQualifiedJavaType("String..."),
                 MagicConstants.SELECT_COLUMNS_PARAM_NAME,
                 "@Param(\"" + MagicConstants.SELECT_COLUMNS_PARAM_NAME + "\")"));
+        //<<<<<<<<<<
 
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
 
         addMapperAnnotations(interfaze, method);
 
+        //FIXME >>>>>>>>>>
         // 导入 provider
         importedTypes.add(new FullyQualifiedJavaType(introspectedTable.getMyBatis3SqlProviderType()));
+        //<<<<<<<<<<
 
         if (context.getPlugins()
                 .clientSelectByExampleWithoutBLOBsMethodGenerated(method,
